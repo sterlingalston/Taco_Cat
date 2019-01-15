@@ -1,0 +1,9 @@
+1. a user model with an e-mail address and a password
+  1. the password should be hashed with bcrypt
+
+2. views for signing up, logging in, and logging out
+
+3. a model for a taco
+  1. the taco should have a user, a protein choice, a cheese choice, a shell choice, and a free-form text field for further options
+  
+4. the ability for users to browse others users' recent taco creations on the home page
