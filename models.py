@@ -22,4 +22,9 @@ class User(UserMixin, Model):
             raise ValueError("User already exists.")
             
 class Taco(Model):
-    pass
+    user = CharField(unique = True)
+    protein = CharField(max_length = 100)
+    shell = CharField(max_length = 100)
+    cheese = BooleanField(default = False)
+    extras = TextField()
+    

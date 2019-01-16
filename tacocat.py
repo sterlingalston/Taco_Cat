@@ -19,3 +19,23 @@ app.secret_key = 'auoesh.bouoastuh.43,uoausoehuosth3ououea.auoub!'
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(userid):
+    try:
+        return models.User.get(models.User.id == userid)
+    except models.DoesNotExist:
+        return None
+
+@app.before_request
+def before_request():
+    """Connect to the database before each request."""
+    g.db = models.DATABASE
+    g.db.connect()
+    g.user = current_user
+
+@app.after_request
+def after_request(response):
+    """Close the database connection after each request."""
+    g.db.close()
+    return response
