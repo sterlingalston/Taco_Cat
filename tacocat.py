@@ -39,3 +39,32 @@ def after_request(response):
     """Close the database connection after each request."""
     g.db.close()
     return response
+  
+@app.route('/register', methods=('GET', 'POST'))
+def register():
+    form = forms.RegisterForm()
+    if form.validate_on_submit():
+        flash("Yay, you registered!", "success")
+        models.User.create_user(
+            email=form.email.data,
+            password=form.password.data
+        )
+        return redirect(url_for('index'))
+    return render_template('register.html', form=form)
+'''  
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('404.html'), 404 # status code to send back when rendering template  
+'''
+
+if __name__ == '__main__':
+    models.initialize()
+    try:
+        models.User.create_user(
+            email='malston@gmail.com',
+            password='malston11',
+            admin=True
+        )
+    except ValueError:
+        pass
+    app.run(debug=DEBUG, host=HOST, port=PORT)
