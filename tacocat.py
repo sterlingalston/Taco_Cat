@@ -51,14 +51,36 @@ def register():
         )
         return redirect(url_for('index'))
     return render_template('register.html', form=form)
-'''  
-@app.errorhandler(404)
-def not_found(error):
-    return render_template('404.html'), 404 # status code to send back when rendering template  
-'''
+
+@app.route('/login', methods=('GET', 'POST'))
+def login():
+    form = forms.LoginForm()
+    if form.validate_on_submit():
+        try:
+            user = models.User.get(models.User.email == form.email.data)
+        except models.DoesNotExist:
+            flash("Your email or password doesn't match!", "error")
+        else:
+            if check_password_hash(user.password, form.password.data):
+                login_user(user)
+                flash("You've been logged in!", "success")
+                return redirect(url_for('index'))
+            else:
+                flash("Your email or password doesn't match!", "error")
+    return render_template('login.html', form=form)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("You've been logged out! Come back soon!", "success")
+    return redirect(url_for('index'))
+
 
 @app.route('/taco', methods = ('GET', 'POST'))
-def taco(): #@login_required
+@login_required
+def taco():
     form = forms.TacoForm()
     if form.validate_on_submit():
         models.Taco.create( user = g.user._get_current_object(),
@@ -66,10 +88,16 @@ def taco(): #@login_required
                            shell = form.shell.data.strip(),
                            cheese = form.cheese.data,
                            extras = form.extras.data.strip())
-        flash("Message posted! Thanks!", "success")
+        flash("Taco added!", "success")
         return redirect(url_for('index'))
     return render_template('taco.html', form = form)
 
+'''  
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('404.html'), 404 # status code to send back when rendering template  
+'''  
+  
 @app.route('/')
 def index():
     tacos = models.Taco.select().limit(100)
