@@ -27,6 +27,10 @@ class User(UserMixin, Model):
         except IntegrityError:
             raise ValueError("User already exists.")
             
+    def get_tacos(self):
+        return Tacos.select().where(Taco.user == self)
+        
+            
 class Taco(Model):
     user = ForeignKeyField(
         rel_model = User,

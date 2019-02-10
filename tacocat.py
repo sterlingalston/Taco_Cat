@@ -57,6 +57,24 @@ def not_found(error):
     return render_template('404.html'), 404 # status code to send back when rendering template  
 '''
 
+@app.route('/taco', methods = ('GET', 'POST'))
+def taco(): #@login_required
+    form = forms.TacoForm()
+    if form.validate_on_submit():
+        models.Taco.create( user = g.user._get_current_object(),
+                           protein = form.protein.data.strip(),
+                           shell = form.shell.data.strip(),
+                           cheese = form.cheese.data,
+                           extras = form.extras.data.strip())
+        flash("Message posted! Thanks!", "success")
+        return redirect(url_for('index'))
+    return render_template('taco.html', form = form)
+
+@app.route('/')
+def index():
+    tacos = models.Taco.select().limit(100)
+    return render_template('index.html', tacos = tacos)
+  
 if __name__ == '__main__':
     models.initialize()
     try:
