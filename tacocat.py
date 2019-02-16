@@ -101,7 +101,8 @@ def not_found(error):
 @app.route('/')
 def index():
     tacos = models.Taco.select().limit(100)
-    return render_template('index.html', tacos = tacos)
+    msg_no_tacos = "No tacos added!"
+    return render_template('index.html', tacos = tacos, msg_no_tacos = msg_no_tacos)
   
 if __name__ == '__main__':
     models.initialize()
