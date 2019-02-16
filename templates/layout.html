@@ -25,7 +25,7 @@
           <nav class="menu">
               {% if current_user.is_authenticated %}
               <a href="{{ url_for('logout') }}"  title="Log out">Log out</a>
-              <a href="{{ url_for('register') }}"  title="sign up">Sign up</a>
+              <a href="{{ url_for('taco') }}"  title="taco">Add a new taco</a>
               {% else %}
               <a href="{{ url_for('login') }}"  title="Log in">Log in</a>
               <a href="{{ url_for('register') }}"  title="sign up">Sign up</a>
